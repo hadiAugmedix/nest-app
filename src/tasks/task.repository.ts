@@ -22,24 +22,27 @@ export class TaskRepository extends Repository<Task> {
         return task;
     }
 
-    async getAll(): Promise<Task[]> {
+    async getAll(user: User): Promise<Task[]> {
         const query = this.createQueryBuilder('task');
+        query.where("task.userId = :userId", { userId: user.id });
         const tasks = await query.getMany();
 
         return tasks;
     }
 
-    async search(filterTaskDto: FilterTaskDto): Promise<Task[]> {
+    async search(filterTaskDto: FilterTaskDto, user: User): Promise<Task[]> {
         const { status, q } = filterTaskDto;
 
         const query = this.createQueryBuilder('task');
+
+        query.where("task.userId = :userId", { userId: user.id });
 
         if (status) {
             query.andWhere('task.status = :status', { status });
         }
 
         if (q) {
-            query.andWhere('task.title LIKE :search OR task.description LIKE :search', { search: `%${q}%` });
+            query.andWhere('(task.title LIKE :search OR task.description LIKE :search)', { search: `%${q}%` });
         }
 
         const tasks = await query.getMany();

@@ -16,13 +16,13 @@ export class TasksController {
     constructor(private taskService: TasksService) {}
 
     @Get()
-    async index(): Promise<Task[]> {
-        return await this.taskService.getAll();
+    async index(@GetUser() user: User): Promise<Task[]> {
+        return await this.taskService.getAll(user);
     }
 
     @Get('/search')
-    search(@Query(ValidationPipe) filterTaskDto: FilterTaskDto) {
-        return this.taskService.search(filterTaskDto);
+    search(@Query(ValidationPipe) filterTaskDto: FilterTaskDto, @GetUser() user: User) {
+        return this.taskService.search(filterTaskDto, user);
     }
 
     @Post()
@@ -39,8 +39,8 @@ export class TasksController {
     // }
 
     @Get('/:id')
-    show(@Param('id', ParseIntPipe) id: number): Promise<Task> {
-        return this.taskService.find(id);
+    show(@Param('id', ParseIntPipe) id: number, @GetUser() user: User): Promise<Task> {
+        return this.taskService.find(id, user);
     }
 
     // edit() {
@@ -54,13 +54,14 @@ export class TasksController {
     @Patch('/:id/status')
     updateStatus(
         @Param('id', ParseIntPipe) id: number,
-        @Body('status', TaskStatusValidationPipe) status: TaskStatus
+        @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+        @GetUser() user: User,
     ): Promise<Task> {
-        return this.taskService.updateStatus(id, status);
+        return this.taskService.updateStatus(id, status, user);
     }
 
     @Delete('/:id')
-    destroy(@Param('id') id: number): Promise<DeleteResult> {
-        return this.taskService.destroy(id);
+    destroy(@Param('id') id: number, @GetUser() user: User): Promise<DeleteResult> {
+        return this.taskService.destroy(id, user);
     }
 }
