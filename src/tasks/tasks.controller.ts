@@ -7,6 +7,8 @@ import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -25,8 +27,11 @@ export class TasksController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-        return this.taskService.create(createTaskDto);
+    create(
+        @Body() createTaskDto: CreateTaskDto,
+        @GetUser() user: User,
+    ): Promise<Task> {
+        return this.taskService.create(createTaskDto, user);
     }
 
     // store() {
