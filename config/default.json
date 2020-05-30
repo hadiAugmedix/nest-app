@@ -5,9 +5,15 @@
     "db": {
         "type": "mysql",
         "port": 3306,
-        "database": "taskmanagement"
+        "database": "taskmanagement",
+        "host": "localhost",
+        "username": "root",
+        "password": "",
+        "synchronize": true,
+        "logging": false
     },
     "jwt": {
-        "expiresIn": 86400
+        "expiresIn": 86400,
+        "secret": "topsecret"
     }
 }

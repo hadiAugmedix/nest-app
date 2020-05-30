@@ -9,15 +9,17 @@ export interface ServerConfigInterface {
 }
 
 export interface DbConfigInterface {
-    type: string;
+    type: any;
     port: number;
     database: string;
     host: string;
     username: string;
     password: string;
     synchronize: boolean;
+    logging: boolean;
 }
 
 export interface JwtConfigInterface {
     expiresIn: number;
+    secret: string;
 }
